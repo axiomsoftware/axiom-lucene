@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<project name="axiom-lucene" default="all" basedir=".">
+
+	<property name="jar.name" value="axiom-lucene"/>
+    <property name="home.dir" value="."/>
+	<property name="dist.dir" value="${home.dir}/dist"/>
+    <property name="build.dir" value="${home.dir}/build"/>
+	<property name="src.dir" value="${home.dir}/src/java"/>
+	<property name="java.version.default" value="1.6"/>
+
+	<path id="classpath">
+		<pathelement location="${build.dir}/classes"/>
+	</path>
+
+	<target name="all" depends="build"/>
+
+	<target name="init">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${build.dir}/classes"/>
+		<mkdir dir="${dist.dir}"/>
+	</target>
+
+	<target name="clean" description="Removes contents of build and dist directories">
+		<delete dir="${build.dir}"/>
+		<delete dir="${dist.dir}"/>
+	</target>
+
+	<target name="build" depends="clean, init">
+		<property environment="env"/>
+
+		<condition property="java_version"
+			value="${env.JAVA_VERSION}"
+			else="${java.version.default}">
+			<and>
+				<isset property="env.JAVA_VERSION"/>
+			</and>
+		</condition>
+		
+		<antcall target="compile">
+			<param name="version" value="${java_version}"/>
+		</antcall>		
+
+		<antcall target="jar">
+			<param name="version" value="${java_version}"/>
+		</antcall>		
+	</target>
+	
+	<target name="compile" depends="init">
+		<property name="deprecation" value="off"/>
+		<property name="debug" value="on"/>
+        <property name="optimize" value="on"/>
+		<property name="encoding" value="utf-8" /> 
+
+		<condition property="version"
+			value="${java.version.default}">
+			<not>
+				<isset property="version"/>
+			</not>
+		</condition>
+
+		<javac srcdir="${src.dir}"
+ 			encoding="${encoding}"
+            source="${version}"
+            target="${version}"
+	    	destdir="${build.dir}/classes"
+            debug="${debug}"
+            deprecation="${deprecation}"
+            optimize="${optimize}">
+            <classpath refid="classpath" />
+        </javac>
+    </target>
+
+	<target name="jar" depends="compile" description="Packages the JAR file">
+		<jar destfile="${dist.dir}/${jar.name}.jar"	basedir="${build.dir}/classes"/>
+	</target>
+	
+</project>
