@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <project name="axiom-lucene" default="all" basedir=".">
 
-
 	<property name="jar.name" value="axiom-lucene"/>
     <property name="home.dir" value="."/>
 	<property name="dist.dir" value="${home.dir}/dist"/>
