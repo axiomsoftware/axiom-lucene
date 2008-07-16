@@ -40,9 +40,7 @@
 			<param name="version" value="${java_version}"/>
 		</antcall>		
 
-		<antcall target="jar">
-			<param name="version" value="${java_version}"/>
-		</antcall>		
+		<antcall target="jar"/>
 	</target>
 	
 	<target name="compile" depends="init">
