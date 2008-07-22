@@ -115,13 +115,17 @@ public class DeletedInfos extends Hashtable implements Serializable {
                 }
                 listOfDocIds.add(intval);
                 
-                if (!delval.equals(infos.get(key))) {
+                if (!delval.equals(infos.get(key)) || !"0".equals(layerField)) {
                     Field df = d.getField(DELETED);
                     if (df != null && delmarker.equals(df.stringValue())) {
                         infos.put(key, delval);
                         continue;
                     } 
-                    Field cf1 = searcher.doc(((Integer)infos.get(key)).intValue()).getField("lastmodified");
+                    int ival = ((Integer)infos.get(key)).intValue();
+                    Field cf1 = null;
+                    if (ival > delval.intValue()) {
+                    	searcher.doc(ival).getField("lastmodified");
+                    }
                     Field cf2 = d.getField(LASTMODIFIED);
                     if (cf1 == null && cf2 != null) {
                         infos.put(key, intval);
