@@ -15,6 +15,13 @@ package org.apache.lucene.index;
  * limitations under the License.
  */
 
+/* 
+ * Modified by:
+ * 
+ * Axiom Software Inc., 11480 Commerce Park Drive, Third Floor, Reston, VA 20191 USA
+ * email: info@axiomsoftwareinc.com
+ */
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
