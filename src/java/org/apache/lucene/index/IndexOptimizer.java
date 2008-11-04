@@ -99,8 +99,10 @@ public class IndexOptimizer {
             }
         }
         
-        mergedDocCount = merger.merge();
-        
+        // TODO: Eventually, we want to do this synchronization at a far finer granularity
+        synchronized (directory) {
+        	mergedDocCount = merger.merge();
+        }
         segmentsDeleteCount = size;
         
         // close readers before we attempt to delete now-obsolete segments

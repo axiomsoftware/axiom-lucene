@@ -73,6 +73,38 @@ public final class SegmentInfos extends Vector {
       input.close();
     }
   }
+  
+  public final void read(IndexInput input, Directory directory) throws IOException {
+
+	  try {
+		  int format = input.readInt();
+		  if(format < 0){     // file contains explicit format info
+			  // check that it is a format we can understand
+			  if (format < FORMAT)
+				  throw new IOException("Unknown format version: " + format);
+			  version = input.readLong(); // read version
+			  counter = input.readInt(); // read counter
+		  }
+		  else{     // file is in old format without explicit format info
+			  counter = format;
+		  }
+
+		  for (int i = input.readInt(); i > 0; i--) { // read segmentInfos
+			  SegmentInfo si =
+				  new SegmentInfo(input.readString(), input.readInt(), directory);
+			  addElement(si);
+		  }
+
+		  if(format >= 0){    // in old format the version number may be at the end of the file
+			  if (input.getFilePointer() >= input.length())
+				  version = System.currentTimeMillis(); // old file format without version number
+			  else
+				  version = input.readLong(); // read version
+		  }
+	  }
+	  finally {
+	  }
+  }
 
   public final void write(Directory directory) throws IOException {
     IndexOutput output = directory.createOutput("segments.new");
